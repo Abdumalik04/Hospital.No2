@@ -1,8 +1,12 @@
+package service;
+
+import dao.imp.Doctor;
 import model.Department;
+import service.DepartmentService;
 
 import java.util.List;
-
 public class DepartmentServiceImpl implements DepartmentService {
+
     @Override
     public String addDepartmentToHospital(Long id, Department department) {
         return null;

@@ -1,4 +1,4 @@
 package dao;
 
-public interface Doctor {
+public interface  Doctor {
 }
