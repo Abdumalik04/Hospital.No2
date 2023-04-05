@@ -9,6 +9,8 @@ public class Doctor {
    private String lastName;
    private Gender gender;
    private int experienceYear;
+   public Doctor(){
+   }
 
     public Doctor(Long id, String firstName, String lastName, Gender gender, int experienceYear) {
         this.id = id;
