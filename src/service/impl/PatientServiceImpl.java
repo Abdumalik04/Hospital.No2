@@ -8,38 +8,41 @@ import java.util.Map;
 
 public class PatientServiceImpl implements PatientService {
 
+    private PatientService patientService;
+
     @Override
     public String addPatientToHospital(Long id, Patient patient) {
-        return null;
+        return patientService.addPatientToHospital(id, patient);
     }
 
     @Override
     public String addPatientsToHospital(Long id, List<Patient> patients) {
-        return null;
+        return patientService.addPatientsToHospital(id, patients);
     }
 
     @Override
     public String updatePatientById(Long id, Patient patientsNewInfo) {
-        return null;
+        return patientService.updatePatientById(id, patientsNewInfo);
     }
 
     @Override
     public void removePatientById(Long id) {
+        patientService.removePatientById(id);
 
     }
 
     @Override
     public Patient getPatientById(Long id) {
-        return null;
+        return patientService.getPatientById(id);
     }
 
     @Override
     public Map<Integer, Patient> getPatientByAge() {
-        return null;
+        return patientService.getPatientByAge();
     }
 
     @Override
     public List<Patient> sortPatientsByAge(String ascOrDesc) {
-        return null;
+        return patientService.sortPatientsByAge(ascOrDesc);
     }
 }

@@ -2,14 +2,16 @@ package model;
 
 import enums.Gender;
 
+import java.time.LocalDate;
+
 public class Patient {
     private Long id;
     private String firstName;
     private String lastName;
-    private int age;
+    private LocalDate age;
     private Gender gender;
 
-    public Patient(Long id, String firstName, String lastName, int age, Gender gender) {
+    public Patient(Long id, String firstName, String lastName, LocalDate age, Gender gender) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,11 +43,11 @@ public class Patient {
         this.lastName = lastName;
     }
 
-    public int getAge() {
+    public LocalDate getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(LocalDate age) {
         this.age = age;
     }
 

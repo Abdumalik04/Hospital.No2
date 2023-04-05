@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 
 public interface  Doctor {
+
     String addDoctorToHospital(Long id, Doctor doctor);
     Doctor findDoctorById(Long id);
     String updateDoctor(Long id, Doctor doctor);
