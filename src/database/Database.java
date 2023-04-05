@@ -1,6 +1,9 @@
 package database;
 
+import model.Department;
 import model.Doctor;
+import model.Hospital;
+import model.Patient;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
