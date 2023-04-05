@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class Hospital {
     private Long id;
     private String hospitalName;
