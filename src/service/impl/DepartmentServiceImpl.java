@@ -1,6 +1,5 @@
 package service.impl;
 
-import dao.imp.Doctor;
 import model.Department;
 import service.DepartmentService;
 
