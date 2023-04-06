@@ -30,9 +30,9 @@ public class Main {
         System.out.println(hospitalmpl.findHospitalById(2l));
         System.out.println(hospitalmpl.getAllPatientFromHospital(6l));
         System.out.println(hospitalmpl.getAllHospital());
-        System.out.println(hospitalmpl.deleteHospitalById(2l));
         System.out.println(hospitalmpl.findHospitalById(2l));
         System.out.println(hospitalmpl.getAllHospitalByAddress("jal"));
+        System.out.println(hospitalmpl.deleteHospitalById(1l));
 
 //        System.out.println(hospitalDao.addHospital(hospital1));
 //        System.out.println(hospitalDao.findHospitalById(1L));

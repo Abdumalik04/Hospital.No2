@@ -2,6 +2,7 @@ package dao.imp;
 
 import dao.HospitalDao;
 import database.Database;
+import exception.Exception;
 import model.Hospital;
 import model.Patient;
 
@@ -56,28 +57,43 @@ public class Hospitalmpl implements HospitalDao {
     @Override
     public String deleteHospitalById(Long id) {
         try {
-            database.getHospitals().removeIf(x -> x.getId() == id);
-            return "Succesfully removed !";
-        } catch (Exception e) {
-            System.out.println("Uncorrect id of hospital!" + e.getMessage());
-            return "Uncorrect id of hospital";
+            if (database.getHospitals().removeIf(x -> x.getId() == id)) {
+                return "Succesfully removed !";
+
+            } else {
+                throw new Exception("Uncorect id of hospital");
+            }
+
+
+        } catch
+        (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
 
     }
 
     @Override
     public Map<String, Hospital> getAllHospitalByAddress(String address) {
+        Map <String,Hospital>hospitalMap=new HashMap<>();
+        boolean isTrue = true;
         try {
-            return database.getHospitals()
-                    .stream()
-                    .filter(x -> x.getAddress().equals(address))
-                    .collect(Collectors.toMap(Hospital::getHospitalName, hospital -> hospital));
-        } catch (Exception e) {
-            System.out.println("Uncerrect adress of hospital!+"+e.getMessage());
-            return new HashMap<>();
-        }
+            for (Hospital d : database.getHospitals()
+            ) {
+                if(d.getAddress().equalsIgnoreCase(address)){
+                    hospitalMap.put(d.getAddress().toString(),d);
+                    return hospitalMap;
+                }else {
+                    isTrue=false;
+                }
+            }
+            if (!isTrue){
+                throw new Exception("Uncorect adress!");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        } return hospitalMap;
     }
 }
-
 
 
