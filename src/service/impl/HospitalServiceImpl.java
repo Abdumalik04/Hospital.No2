@@ -16,50 +16,34 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public String addHospital(Hospital hospital) {
-        database.getHospitals().add(hospital);
-        return hospital.toString();
+        return null;
     }
 
 
     @Override
     public Hospital findHospitalById(Long id) {
-        return database.getHospitals().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+        return null;
 
     }
 
     @Override
     public List<Hospital> getAllHospital() {
-        return database.getHospitals();
+        return null;
     }
 
     @Override
     public List<Patient> getAllPatientFromHospital(Long id) {
-        List<Patient> patients = new ArrayList<>();
-        Stream<Hospital> hospitalStream = database.getHospitals().stream().filter(x -> {
-            if (x.getId() == id) {
-                patients.add((Patient) x.getPatients());
-            }
-            return false;
-
-        });
-        return patients;
+        return null;
     }
 
     @Override
     public String deleteHospitalById(Long id) {
-        database.getHospitals().removeIf(x -> x.getId() == id);
-        return "succesfully removed !";
+        return null;
+
     }
 
     @Override
     public Map<String, Hospital> getAllHospitalByAddress(String address) {
-        Map<String, Hospital> hospitalMap = new HashMap<>();
-        Stream<Hospital> patients = database.getHospitals().stream().filter(x -> {
-            if (x.getAddress().equalsIgnoreCase(address)) {
-                hospitalMap.put(x.getAddress(), x);
-            }
-            return false;
-        });
-        return hospitalMap;
+        return null;
     }
 }

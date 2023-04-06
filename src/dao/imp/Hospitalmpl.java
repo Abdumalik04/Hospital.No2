@@ -5,30 +5,35 @@ import database.Database;
 import model.Hospital;
 import model.Patient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Hospitalmpl implements HospitalDao {
 
     Database database = new Database();
+
     @Override
     public String addHospital(Hospital hospital) {
-        boolean stream = database.getHospitals().stream().anyMatch(x -> x.getId().equals(hospital.getId()));
-        if (stream) {
-            return "Hospital already exists";
-        } else {
+
+        try {
+            database.getHospitals().stream().filter(x -> x.getHospitalName().equalsIgnoreCase(hospital.getHospitalName())).findFirst().orElseThrow(() -> new Exception("Hospital already exists"));
+            return "Same hospital name";
+        } catch (Exception e) {
             database.getHospitals().add(hospital);
-            return "Hospital added successfully";
+            return "Hospital seccesfully added";
+
         }
     }
 
     @Override
     public Hospital findHospitalById(Long id) {
-        Optional<Hospital> d = database.getHospitals().stream().filter(x -> x.getId().equals(id)).findFirst();
-        return d.orElse(null);
+        try {
+            return database.getHospitals().stream().filter(x -> x.getId() == id).findFirst().orElseThrow(() -> new Exception("Uncorrect id of hospital!"));
+        } catch (Exception e) {
+            System.out.println("Uncorrect hospital id !");
+            return null;
+        }
     }
 
     @Override
@@ -38,31 +43,41 @@ public class Hospitalmpl implements HospitalDao {
 
     @Override
     public List<Patient> getAllPatientFromHospital(Long id) {
-        Optional<Hospital> hospital = database.getHospitals().stream().filter(x -> x.getId().equals(id)).findFirst();
-        if (hospital.isPresent()) {
-            return hospital.get().getPatients();
-        } else {
-            return new ArrayList<>();
+        try {
+            return database.getHospitals().stream().filter(x -> x.getId() == id).findFirst().orElseThrow(() -> new Exception("Uncorrect id of hospital!")).getPatients();
+        } catch (Exception e) {
+            System.out.println("Uncorrect hospital id !");
+            return null;
         }
+
     }
+
 
     @Override
     public String deleteHospitalById(Long id) {
-        boolean success = database.getHospitals().removeIf(x -> x.getId().equals(id));
-        if (success) {
-            return "Hospital with ID " + id + " has been deleted.";
-        } else {
-            return "Failed to delete hospital with ID " + id;
+        try {
+            database.getHospitals().removeIf(x -> x.getId() == id);
+            return "Succesfully removed !";
+        } catch (Exception e) {
+            System.out.println("Uncorrect id of hospital!" + e.getMessage());
+            return "Uncorrect id of hospital";
         }
+
     }
 
     @Override
     public Map<String, Hospital> getAllHospitalByAddress(String address) {
-        return database.getHospitals()
-                .stream()
-                .filter(x -> x.getAddress().equals(address))
-                .collect(Collectors.toMap(Hospital::getHospitalName, hospital -> hospital));
+        try {
+            return database.getHospitals()
+                    .stream()
+                    .filter(x -> x.getAddress().equals(address))
+                    .collect(Collectors.toMap(Hospital::getHospitalName, hospital -> hospital));
+        } catch (Exception e) {
+            System.out.println("Uncerrect adress of hospital!+"+e.getMessage());
+            return new HashMap<>();
+        }
     }
-
-
 }
+
+
+
