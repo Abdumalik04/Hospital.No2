@@ -69,13 +69,13 @@ public class Hospital {
 
     @Override
     public String toString() {
-        return "Hospital{" +
-                "id=" + id +
-                ", hospitalName='" + hospitalName + '\'' +
-                ", address='" + address + '\'' +
-                ", departments=" + departments +
-                ", doctors=" + doctors +
-                ", patients=" + patients +
+        return "\nHospital{" +
+                "\nid=" + id +
+                "\n hospitalName='" + hospitalName + '\'' +
+                "\n address='" + address + '\'' +
+                "\n departments=" + departments +
+                "\ndoctors=" + doctors +
+                "\n patients=" + patients +
                 '}';
     }
 }

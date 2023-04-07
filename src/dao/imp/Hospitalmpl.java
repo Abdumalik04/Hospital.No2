@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class Hospitalmpl implements HospitalDao {
 
-    Database database = new Database();
+ public   static Database database = new Database();
 
     @Override
     public String addHospital(Hospital hospital) {

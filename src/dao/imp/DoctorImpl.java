@@ -1,73 +1,154 @@
 package dao.imp;
 
 import dao.DoctorDao;
-import database.Database;
+import exception.Exception;
+import model.Department;
 import model.Doctor;
 import model.Hospital;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DoctorImpl implements DoctorDao {
-Database database=new Database();
+
     @Override
     public String addDoctorToHospital(Long id, Doctor doctor) {
-        for (Hospital hospital:database.getHospitals()){
-            if (hospital.getId().equals(id)){
-                hospital.getDoctors().add(doctor);
-            }
+        try {
+            Hospitalmpl.database.getHospitals().stream().
+                    filter(x -> x.getDoctors().add(doctor)).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            return "succesfully added";
+        } catch (NoSuchElementException e) {
+            return "Uncorrect id of hospital!";
         }
-        return "Added Hospital: "+doctor+" ,Doctor";
     }
-    @Override
-    public DoctorDao findDoctorById(Long id) {
-        for (Hospital d:database.getHospitals()){
-            for (Doctor doctor:d.getDoctors()){
-                if (doctor.getId().equals(id)){
 
-                }
-            }
+
+    @Override
+    public Doctor findDoctorById(Long id) {
+        try {
+            Hospital hospital = Hospitalmpl.database.getHospitals().stream().
+                    filter(x -> x.getDoctors().stream().
+                            anyMatch(p -> p.getId().equals(id))).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            Doctor doctor = hospital.
+                    getDoctors().stream().filter(x -> x.getId().equals(id)).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            return doctor;
+        } catch (NoSuchElementException e) {
+            System.out.println("Uncorrect id of doctor");
+            return null;
         }
-        return null ;
     }
 
     @Override
     public String updateDoctor(Long id, Doctor doctor) {
-        for (Hospital f:database.getHospitals()){
-            for (Doctor doctors: f.getDoctors()){
-                if (doctors.getId().equals(id)){
-                    doctors.setFirstName(doctor.getFirstName());
-                    doctors.setLastName(doctor.getLastName());
-                    doctors.setGender(doctor.getGender());
-                    doctors.setExperienceYear(doctor.getExperienceYear());
-                }
-            }
+        try {
+            Hospital hospital = Hospitalmpl.database.getHospitals().stream().
+                    filter(x -> x.getDoctors().stream().
+                            anyMatch(p -> p.getId().equals(id))).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            Doctor doctor1 = hospital.
+                    getDoctors().stream().filter(x -> x.getId().equals(id)).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            doctor1.setFirstName(doctor.getFirstName());
+            doctor1.setLastName(doctor.getLastName());
+            doctor1.setId(doctor.getId());
+            return doctor1.toString() + "Succesfully updated!";
+        } catch (NoSuchElementException e) {
+            System.out.println("Uncorrect id of hospital");
+            return null;
         }
-        return "Successfully updated";
     }
+
     @Override
     public void deleteDoctorById(Long id) {
-for (Hospital d:database.getHospitals()){
-    for (Doctor s:d.getDoctors()){
-        if (s.getId().equals(id)){
-            d.getDoctors().remove(s);
+        AtomicBoolean isDeleted = new AtomicBoolean(false);
+        try {
+            Hospitalmpl.database.getHospitals().stream()
+                    .filter(hospital -> hospital.getDoctors().stream().anyMatch(doctor -> doctor.getId().equals(id)))
+                    .findFirst()
+                    .ifPresent(hospital -> {
+                        hospital.getDoctors().removeIf(doctor -> doctor.getId().equals(id));
+                        isDeleted.set(true);
+                    });
+
+
+            if (isDeleted.get()) {
+                System.out.println("Doctor with ID " + id + " has been deleted.");
+            } else {
+                throw new Exception("Uncorrect id of doctor!");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
+
     }
-}
-    }
+
 
     @Override
     public String assignDoctorToDepartment(Long departmentId, List<Long> doctorsId) {
-        return null;
+        List<Doctor> doctors = new ArrayList<>();
+
+        Hospitalmpl.database.getHospitals().stream().
+                filter(x -> {
+                    for (Doctor p : x.getDoctors()) {
+                        if (doctorsId.contains(p.getId())) {
+                            doctors.add(p);
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+
+
+        try {
+            Hospital hospital = Hospitalmpl.database.getHospitals().stream().
+                    filter(x -> x.getDepartments().stream().
+                            anyMatch(p -> p.getId().equals(departmentId))).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+            Department department= hospital.
+                    getDepartments().stream().filter(x -> x.getId().equals(departmentId)).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+           department.getDoctors().addAll(doctors);
+
+           return department.toString();
+        } catch (NoSuchElementException e) {
+            System.out.println("Uncorrect id of doctor");
+            return null;
+        }
+
+    }
+
+
+    @Override
+    public List<Doctor> getAllDoctorsByHospitalId(Long id) {
+        try {
+            Hospital hospital = Hospitalmpl.database.getHospitals().stream().
+                    filter(x -> x.getId().equals(id)).findFirst().orElseThrow(NoSuchElementException::new);
+            return hospital.getDoctors();
+
+        } catch (NoSuchElementException e) {
+            System.out.println("Uncorrrect id!");
+            return new ArrayList<>();
+        }
+
     }
 
     @Override
-    public List<DoctorDao> getAllDoctorsByHospitalId(Long id) {
-        return null;
-    }
+    public List<Doctor> getAllDoctorsByDepartmentId(Long id) {
 
-    @Override
-    public List<DoctorDao> getAllDoctorsByDepartmentId(Long id) {
-        return null;
+        try {
+            Department department = Hospitalmpl.database.getHospitals().stream().
+                    flatMap(x -> x.getDepartments().stream().
+                            filter(p -> p.getId().equals(id))).
+                    findFirst().orElseThrow(NoSuchElementException::new);
+            return department.getDoctors();
+        } catch (NoSuchElementException e) {
+            System.out.println("Uncorrect id of department!");
+            return new ArrayList<>();
+        }
     }
 }
+
